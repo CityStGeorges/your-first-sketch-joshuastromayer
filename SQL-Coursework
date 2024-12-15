@@ -1,43 +1,143 @@
 CREATE TABLE Member ( 
-  MEMBERID INTEGER(10), 
+  MEMBERID INTEGER(4), 
   Name VARCHAR(40), 
   Age INTEGER(2), 
-  WEIGHT INTEGER(3),
+  Weight INTEGER(3),
   PRIMARY KEY (MEMBERID)
 ); 
 
 CREATE TABLE Fighter( 
-  MEMBERID INTEGER(10), 
+  MEMBERID INTEGER(4), 
   NumberOfFights INTEGER(4), 
-  TotalPoints INTEGER(4),
+  TotalPoints INTEGER(5),
   PRIMARY KEY (MEMBERID),
   FOREIGN KEY (MEMBERID) REFERENCES Member(MEMBERID) 
 ); 
 
 CREATE TABLE Coach( 
-  MEMBERID INTEGER(10), 
+  MEMBERID INTEGER(4), 
   Level INTEGER(1), 
   PRIMARY KEY (MEMBERID),
   FOREIGN KEY (MEMBERID) REFERENCES Member(MEMBERID) 
 ); 
 
 CREATE TABLE TrainingSession ( 
-  SESSIONID INTEGER(10), 
+  SESSIONID INTEGER(8), 
   DateOfSession INTEGER(6), 
-  Difficulty VARCHAR(6),
-  MEMBERID INTEGER(10),
+  Difficulty VARCHAR(12),
+  MEMBERID INTEGER(4),
   PRIMARY KEY (SESSIONID),
   FOREIGN KEY (MEMBERID) REFERENCES Coach (MEMBERID) 
 ); 
 
 CREATE TABLE Fight ( 
-  FIGHTID INTEGER(10), 
+  FIGHTID INTEGER(5), 
   DateOfFight INTEGER(6), 
-  WinnerOfFight INTEGER(10), 
-  LoserOfFight INTEGER(10),
-  SESSIONID INTEGER(10),
+  WinnerOfFight INTEGER(4), 
+  LoserOfFight INTEGER(4),
+  SESSIONID INTEGER(8),
   PRIMARY KEY (FIGHTID),
   FOREIGN KEY (WinnerOfFight) REFERENCES Member(MEMBERID),
   FOREIGN KEY (LoserOfFight) REFERENCES Member(MEMBERID),
   FOREIGN KEY (SESSIONID) REFERENCES TrainingSession(SESSIONID) 
 ); 
+
+INSERT INTO Member (MEMBERID, Name, Age, Weight) VALUES
+(1285, "Abraham Morgan", 22, 83),
+(712, "Jessica Jones", 37, 62),
+(927, "Sarah Morgan", 21, 72),
+(1484, "Jack Riley", 32, 103),
+(809, "Steve Smith", 19, 64),
+(103, "Amir Williams", 32, 97),
+(377, "Daniella Williams", 23, 71),
+(24, "Paul Rowly", 51, 104),
+(1182, "Susan Brown", 18, 62),
+(1239, "Margaret Williams", 29, 59),
+(742, "Soloman Rodriguez", 25, 65),
+(238, "Mary Green", 21, 71),
+(554, "Christina Facey", 28, 69),
+(829, "Ben Holmes", 49, 93),
+(210, "Darnel Jackson", 22, 88),
+(998, "Carolina Fulba", 27, 63),
+(134, "Rupert Robbins", 36, 103);
+
+INSERT INTO Fighter (MEMBERID, NumberOfFights, TotalPoints) VALUES
+(1285, 624, 1302),
+(927, 312, 523),
+(1484, 520, 1203),
+(809, 104, 143),
+(103, 416, 1010),
+(377, 912, 2570),
+(1182, 52, 73),
+(1239, 78, 104),
+(742, 260, 680),
+(554, 156, 280),
+(829, 312, 904),
+(210, 468, 1205),
+(998, 120, 297),
+(134, 208, 329);
+
+INSERT INTO Coach (MEMBERID, Level) VALUES
+(712, 3),
+(927, 1),
+(1484, 2),
+(103, 2),
+(24, 3),
+(742, 1),
+(238, 3),
+(829, 1),
+(210, 2),
+(998, 1);
+
+-- Logically, there would only be 3-5 coaches, but we were asked to make 10-20 rows per table.
+
+INSERT INTO TrainingSession (SESSIONID, DateOfSession, Difficulty, MEMBERID) VALUES
+(23082901, 230829, "Beginner", 712),
+(23082902, 230829, "Intermediate", 24),
+(23082903, 230829, "Advanced", 238),
+(23083001, 230830, "Beginner", 712),
+(23083002, 230830, "Intermediate", 24),
+(23083003, 230830, "Advanced", 238),
+(23083101, 230831, "Beginner", 712),
+(23083102, 230831, "Intermediate", 24),
+(23083103, 230831, "Advanced", 238),
+(23090101, 230901, "Beginner", 712),
+(23090102, 230901, "Intermediate", 24),
+(23090103, 230901, "Advanced", 238),
+(23090301, 230903, "Beginner", 712),
+(23090302, 230903, "Intermediate", 24),
+(23090303, 230903, "Advanced", 238),
+(23090401, 230904, "Beginner", 712),
+(23090402, 230904, "Intermediate", 24),
+(23090403, 230904, "Advanced", 238);
+
+INSERT INTO Fight (FIGHTID, DateOfFight, WinnerOfFight, LoserOfFight, SESSIONID) VALUES
+(12398, 230901, 554, 377, 23090103),
+(12375, 230830, 1484, 998, 23083002),
+(12493, 230903, 103, 210, 23090303),
+(12335, 230829, 1285, 1182, 23082903),
+(12502, 230904, 829, 210, 23090402),
+(12336, 230829, 1285, 742, 23082901),
+(12487, 230904, 1484, 1239, 23090403),
+(12390, 230901, 742, 1484, 23090103),
+(12301, 230829, 134, 1182, 23082901),
+(12431, 230903, 377, 998, 23090303),
+(12470, 230903, 103, 134, 23090302),
+(12308, 230829, 829, 377, 23082903),
+(12538, 230904, 927, 1484, 23090401),
+(12439, 230903, 210, 927, 23090403);
+
+SELECT COUNT(*) AS TotalMembers 
+FROM Member;
+
+SELECT COUNT(*) AS TotalFighters 
+FROM Fighter;
+
+SELECT COUNT(*) AS TotalCoaches 
+FROM Coach;
+
+SELECT COUNT(*) AS TotalSessions 
+FROM TrainingSession;
+
+SELECT COUNT(*) AS TotalFights 
+FROM Fight;
