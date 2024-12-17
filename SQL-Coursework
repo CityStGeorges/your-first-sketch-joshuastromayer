@@ -127,17 +127,10 @@ INSERT INTO Fight (FIGHTID, DateOfFight, WinnerOfFight, LoserOfFight, SESSIONID)
 (12538, 230904, 927, 1484, 23090401),
 (12439, 230903, 210, 927, 23090403);
 
-SELECT COUNT(*) AS TotalMembers 
-FROM Member;
+UPDATE Coach 
+SET Level = 3
+WHERE MEMBERID = 1484;
 
-SELECT COUNT(*) AS TotalFighters 
-FROM Fighter;
-
-SELECT COUNT(*) AS TotalCoaches 
-FROM Coach;
-
-SELECT COUNT(*) AS TotalSessions 
-FROM TrainingSession;
-
-SELECT COUNT(*) AS TotalFights 
-FROM Fight;
+UPDATE TrainingSession
+SET MEMBERID = 238
+WHERE Difficulty = "Intermediate" AND DateOfSession BETWEEN 230831 AND 230902;
