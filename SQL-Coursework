@@ -147,10 +147,87 @@ JOIN Member M ON F.MEMBERID = M.MEMBERID
 ORDER BY F.NumberOfFights DESC
 LIMIT 3;
 
-SELECT *
-FROM Member
-WHERE MEMBERID = 377;
+SELECT M.Name
+FROM Member M
+JOIN Coach C ON M.MEMBERID = C.MEMBERID
+JOIN Fighter F ON M.MEMBERID = F.MEMBERID;
 
-SELECT *
-FROM Fighter
-WHERE MEMBERID = 377;
+SELECT M.Name, SUM(F.TotalPoints) AS TotalPoints
+FROM Member M
+JOIN Fighter F ON M.MEMBERID = F.MEMBERID
+JOIN Coach C ON M.MEMBERID = C.MEMBERID
+GROUP BY M.Name;
+
+SELECT T.SESSIONID, T.DateOfSession, T.Difficulty
+FROM TrainingSession T
+JOIN Coach C ON T.MEMBERID = C.MEMBERID
+WHERE C.MEMBERID = 712;
+
+SELECT T.Difficulty, AVG(M.Weight) AS AverageWeight
+FROM TrainingSession T
+JOIN Member M ON T.MEMBERID = M.MEMBERID
+GROUP BY T.Difficulty;
+
+SELECT M.Name, COUNT(F.FIGHTID) AS FightsWon
+FROM Fight F
+JOIN Member M ON F.WinnerOfFight = M.MEMBERID
+GROUP BY M.Name;
+
+SELECT T.SESSIONID, C1.MEMBERID AS OldCoach, C2.MEMBERID AS NewCoach
+FROM TrainingSession T
+JOIN Coach C1 ON T.MEMBERID = C1.MEMBERID
+JOIN Coach C2 ON T.MEMBERID = C2.MEMBERID
+WHERE T.Difficulty = "Intermediate" AND T.DateOfSession BETWEEN 230831 AND 230902;
+
+SELECT M.Name AS LoserName, F.DateOfFight
+FROM Fight F
+JOIN Member M ON F.LoserOfFight = M.MEMBERID
+WHERE F.WinnerOfFight = 1484;
+
+SELECT F.FIGHTID, F.DateOfFight
+FROM Fight F
+WHERE F.SESSIONID NOT IN (SELECT SESSIONID FROM TrainingSession);
+
+SELECT T.Difficulty, M.Weight, COUNT(*) AS ParticipantCount
+FROM TrainingSession T
+JOIN Member M ON T.MEMBERID = M.MEMBERID
+GROUP BY T.Difficulty, M.Weight
+ORDER BY ParticipantCount DESC;
+
+SELECT C.MEMBERID, M.Name
+FROM Coach C
+JOIN Member M ON C.MEMBERID = M.MEMBERID
+JOIN TrainingSession T ON C.MEMBERID = T.MEMBERID
+WHERE T.Difficulty = "Advanced";
+
+SELECT T.Difficulty, SUM(F2.TotalPoints) AS TotalPoints
+FROM Fight F
+JOIN TrainingSession T ON F.SESSIONID = T.SESSIONID
+JOIN Fighter F2 ON F.WinnerOfFight = F2.MEMBERID
+GROUP BY T.Difficulty;
+
+SELECT M.Name
+FROM Member M
+WHERE M.MEMBERID NOT IN (
+    SELECT WinnerOfFight FROM Fight
+    UNION
+    SELECT LoserOfFight FROM Fight
+);
+
+SELECT T.DateOfSession, T.Difficulty, M.Name AS CoachName
+FROM TrainingSession T
+JOIN Member M ON T.MEMBERID = M.MEMBERID
+ORDER BY T.DateOfSession ASC;
+
+SELECT M.Name
+FROM Member M
+WHERE M.MEMBERID IN (
+    SELECT MEMBERID
+    FROM TrainingSession
+    WHERE Difficulty = "Beginner"
+)
+AND M.MEMBERID NOT IN (
+    SELECT MEMBERID
+    FROM TrainingSession
+    WHERE Difficulty IN ("Intermediate", "Advanced")
+);
